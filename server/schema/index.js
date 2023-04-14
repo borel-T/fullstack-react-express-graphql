@@ -5,7 +5,7 @@ const graphql = require("graphql");
 // 3 - define Rootqueries (root or entry point to the gragh)
 
 // sample
-const data = [
+const listBooks = [
   {
     id: "2",
     name: "Love 4 you",
@@ -24,9 +24,21 @@ const data = [
     genre: "Fantasy",
     authorId: "2",
   },
+  {
+    id: "6",
+    name: "Jimela",
+    genre: "Fantasy",
+    authorId: "2",
+  },
+  {
+    id: "7",
+    name: "Red groom dress",
+    genre: "Romance",
+    authorId: "1",
+  },
 ];
 
-const authors = [
+const listAuthors = [
   { name: "Brel dinger", age: 44, id: "1" },
   { name: "Oluwa loni", age: 54, id: "2" },
   { name: "Tommy notion", age: 24, id: "3" },
@@ -41,6 +53,7 @@ const {
   GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
+  GraphQLList,
 } = graphql;
 
 // using this we would define a new object type (type here = schema of responses)
@@ -59,7 +72,7 @@ const BookType = new GraphQLObjectType({
       // resolve the query (parent here represents the book schema, which is the current parent of the author in this type definition)
       resolve(parent, args) {
         console.log("parent:::", parent);
-        let author = authors.find((x) => x.id == parent.authorId);
+        let author = listAuthors.find((x) => x.id == parent.authorId);
         return author;
       },
     },
@@ -73,6 +86,17 @@ const AuthorType = new GraphQLObjectType({
     id: { type: GraphQLID },
     name: { type: GraphQLString },
     age: { type: GraphQLInt },
+    // an author can have more than 1 book
+    // let tell the object type that our author can have a list of books
+    books: {
+      type: new GraphQLList(BookType),
+      // if books is requestedm handle the query data to be returned
+      resolve(parent, args) {
+        // return all books with author's id
+        let books = listBooks.filter((x) => x.authorId == parent.id);
+        return books;
+      },
+    },
   }),
 });
 
@@ -87,7 +111,7 @@ const RootQuery = new GraphQLObjectType({
       resolve(parent, args) {
         console.log("book query args:::", args);
         // here we write code to get data from DB/other source
-        let book = data.find((x) => x.id == args.id);
+        let book = listBooks.find((x) => x.id == args.id);
         console.log("book-parent->", parent);
         console.log("book-->", book);
         return book;
@@ -98,7 +122,7 @@ const RootQuery = new GraphQLObjectType({
       type: AuthorType,
       args: { id: { type: GraphQLID } },
       resolve(parent, args) {
-        let author = authors.find((x) => x.id == args.id);
+        let author = listAuthors.find((x) => x.id == args.id);
         return author;
       },
     },
