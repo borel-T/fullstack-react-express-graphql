@@ -126,6 +126,19 @@ const RootQuery = new GraphQLObjectType({
         return author;
       },
     },
+    // DEFINE QUERIES routes for listing-queries
+    books: {
+      type: GraphQLList(BookType),
+      resolve(parent, args) {
+        return listBooks;
+      },
+    },
+    authors: {
+      type: GraphQLList(AuthorType),
+      resolve(parent, args) {
+        return listAuthors;
+      },
+    },
   },
 });
 
