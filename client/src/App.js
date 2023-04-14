@@ -1,6 +1,7 @@
 import "./App.css";
 // components
-import BooList from "./components/bookList";
+import BookList from "./components/bookList";
+import BookForm from "./components/bookForm";
 // apollo
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
@@ -15,7 +16,8 @@ function App() {
     <ApolloProvider client={client}>
       <div className="">
         <h1>hello world</h1>
-        <BooList />
+        <BookList />
+        <BookForm />
       </div>
     </ApolloProvider>
   );

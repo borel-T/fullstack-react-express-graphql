@@ -1,14 +1,6 @@
 import React from "react";
 import { useQuery, gql } from "@apollo/client";
-
-const GET_BOOKS = gql`
-  query GetBooks {
-    books: {
-      name
-      genre
-    }
-  }
-`;
+import { GET_BOOKS } from "../queries/books";
 
 function BooList() {
   // use hook to fetch grahql data
