@@ -15,7 +15,8 @@ const {
   GraphQLBoolean,
   GraphQLID,
   GraphQLInt,
-  GraphQLList,
+  GraphQLList, // list of schemas
+  GraphQLNonNull, // non null fieldns
 } = graphql;
 
 // using this we would define a new object type (type here = schema of responses)
@@ -105,7 +106,7 @@ const Mutations = new GraphQLObjectType({
       type: AuthorType,
       // what are we expecting as data to be stored
       args: {
-        name: { type: GraphQLString },
+        name: { type: new GraphQLNonNull(GraphQLString) },
         age: { type: GraphQLInt },
       },
       // now let's handle the add request
@@ -125,7 +126,7 @@ const Mutations = new GraphQLObjectType({
       type: BookType,
       // what are we expecting as data to be stored
       args: {
-        name: { type: GraphQLString },
+        name: { type: new GraphQLNonNull(GraphQLString) },
         genre: { type: GraphQLString },
         authorId: { type: GraphQLID },
       },
