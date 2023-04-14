@@ -32,7 +32,9 @@ const BookType = new GraphQLObjectType({
     author: {
       type: AuthorType, // mention it's type
       // resolve the query (parent here represents the book schema, which is the current parent of the author in this type definition)
-      resolve(parent, args) {},
+      resolve(parent, args) {
+        return Author.findById(parent.authorId);
+      },
     },
   }), // fields is handle by a fxn inorder to differetiate btw oth
 });
@@ -48,8 +50,10 @@ const AuthorType = new GraphQLObjectType({
     // let tell the object type that our author can have a list of books
     books: {
       type: new GraphQLList(BookType),
-      // if books is requestedm handle the query data to be returned
-      resolve(parent, args) {},
+      // if books is requested handle the query data to be returned
+      resolve(parent, args) {
+        return Book.find({ authorId: parent.id });
+      },
     },
   }),
 });
@@ -62,22 +66,30 @@ const RootQuery = new GraphQLObjectType({
     book: {
       type: BookType, // what kind of object-type woudld be returned
       args: { id: { type: GraphQLID } }, // args* to identity the object-data
-      resolve(parent, args) {},
+      resolve(parent, args) {
+        return Book.findById(args.id);
+      },
     },
     // query for athors
     author: {
       type: AuthorType,
       args: { id: { type: GraphQLID } },
-      resolve(parent, args) {},
+      resolve(parent, args) {
+        return Author.findById(args.id);
+      },
     },
     // DEFINE QUERIES routes for listing-queries
     books: {
       type: GraphQLList(BookType),
-      resolve(parent, args) {},
+      resolve(parent, args) {
+        return Book.find();
+      },
     },
     authors: {
       type: GraphQLList(AuthorType),
-      resolve(parent, args) {},
+      resolve(parent, args) {
+        return Author.find();
+      },
     },
   },
 });
