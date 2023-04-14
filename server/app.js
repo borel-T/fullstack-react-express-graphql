@@ -3,11 +3,15 @@ const moogoose = require("mongoose");
 require("dotenv/config");
 const app = express();
 const { graphqlHTTP } = require("express-graphql"); // would be use as middleware to intercept gQl requests
+const CORS = require("cors");
 
 // get our schema
 const schema = require("./schema/index"); // schema using hard-coded data
 const schemaWithMongoDB = require("./schema/schemaWithMongoDB"); // schema using mongoDB
 const { default: mongoose } = require("mongoose");
+
+// allow cross-origin-server requests
+app.use(CORS());
 
 // use graphql as middleware
 // graph ql funtion would be executed at each request
