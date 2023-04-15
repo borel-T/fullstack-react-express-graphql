@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { useQuery } from "@apollo/client";
+import { useQuery, useMutation } from "@apollo/client";
 import { GET_AUTHORS } from "../queries/authors";
+import { ADD_BOOK, GET_BOOKS } from "../queries/books";
 
 function BooList() {
   // state
@@ -11,6 +12,10 @@ function BooList() {
   // use hook to fetch grahql data
   const { loading, error, data } = useQuery(GET_AUTHORS);
 
+  // mutation hook
+  const [addBook, { loading: addLoading, error: addError }] =
+    useMutation(ADD_BOOK);
+
   // loading
   if (loading) return <p>...loading</p>;
   // error
@@ -18,6 +23,20 @@ function BooList() {
 
   const _handleSubmit = (e) => {
     e.preventDefault();
+    console.log("form", bookName + genre + author);
+    // use hook method, to submit (takes variables)
+    addBook({
+      variables: {
+        name: bookName,
+        genre: genre,
+        authorId: author,
+      },
+      refetchQueries: [
+        {
+          query: GET_BOOKS,
+        },
+      ],
+    });
   };
 
   return (
@@ -62,7 +81,8 @@ function BooList() {
           ))}
         </select>
       </div>
-      <button type="submit">Add</button>
+      <button type="submit">{addLoading ? "...loading" : "Add"}</button>
+      {addError ? <p style={{ color: "red" }}>ERROR adding</p> : null}
     </form>
   );
 }
